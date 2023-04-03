@@ -1,0 +1,3 @@
+[submodule "JniHelpers"]
+	path = JniHelpers
+	url = https://github.com/dourgulf/JniHelpers.git

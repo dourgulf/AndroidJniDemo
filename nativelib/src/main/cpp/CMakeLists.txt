@@ -1,48 +1,40 @@
-# For more information about using CMake with Android Studio, read the
-# documentation: https://d.android.com/studio/projects/add-native-code.html
+cmake_minimum_required(VERSION 3.6)
 
-# Sets the minimum version of CMake required to build the native library.
+project(nativelib CXX)
 
-cmake_minimum_required(VERSION 3.22.1)
+#add_subdirectory(../../../JniHelper ${CMAKE_CURRENT_BINARY_DIR}/jniHelper)
 
-# Declares and names the project.
+find_package (Java REQUIRED)
+if(ANDROID)
+    #
+else()
+    find_package(JNI REQUIRED)
+endif(ANDROID)
 
-project("nativelib")
+include (UseJava)
+include_directories(${JNI_INCLUDE_DIRS})
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
-# Gradle automatically packages shared libraries with your APK.
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library( # Sets the name of the library.
-        nativelib
+# set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 
-        # Sets the library as a shared library.
-        SHARED
+# set(CMAKE_BUILD_TYPE RelWithDebInfo)
+add_compile_definitions(DEBUG=1)
 
-        # Provides a relative path to your source file(s).
-        nativelib.cpp)
+# add_compile_definitions(NDEBUG=1)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+else()
+endif()
 
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because CMake includes system libraries in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
+include_directories(${PROJECT_SOURCE_DIR})
 
-find_library( # Sets the name of the path variable.
-        log-lib
+file(GLOB SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "jni/*.cpp")
+list(APPEND ALL_SOURCES ${SOURCES})
 
-        # Specifies the name of the NDK library that
-        # you want CMake to locate.
-        log)
+add_library(nativelib SHARED ${ALL_SOURCES})
 
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in this
-# build script, prebuilt third-party libraries, or system libraries.
-
-target_link_libraries( # Specifies the target library.
-        nativelib
-
-        # Links the target library to the log library
-        # included in the NDK.
-        ${log-lib})
+target_link_libraries(nativelib
+    PRIVATE
+)

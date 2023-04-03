@@ -15,7 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import top.dawenhing.androidjnidemo.databinding.ActivityMainBinding;
-import top.dawenhing.nativelib.NativeLib;
+import top.dawenhing.nativelib.NativeClass;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.i("Main", new NativeLib().stringFromJNI());
+        NativeClass.main(new String[0]);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
